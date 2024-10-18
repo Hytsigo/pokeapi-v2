@@ -42,12 +42,6 @@ const Search: React.FC<Props> = ({ onSearch }) => {
                         onChange={handleChange}
                         required
                     />
-                    <button
-                        type="button"
-                        className="absolute right-2.5 bottom-2.5 bg-primary-100 hover:bg-primary-200 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2 text-text-100"
-                    >
-                        Search
-                    </button>
                 </div>
             </form>
         </div>
