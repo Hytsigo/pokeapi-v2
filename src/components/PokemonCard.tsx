@@ -2,7 +2,7 @@ import React from "react";
 import Loader from "./common/Loader";
 import Search from "./Search";
 import Pagination from "./Pagination";
-import usePokemonCard from "../hooks/usePokemonCard";
+import usePokemonPagination from "../hooks/usePokemonPagination";
 
 const PokemonCard: React.FC = () => {
     const limit = 20;
@@ -16,7 +16,7 @@ const PokemonCard: React.FC = () => {
         handlePokemonClick,
         displayedPokemons,
         debounceSearch,
-    } = usePokemonCard(limit);
+    } = usePokemonPagination(limit);
 
     if (error) return <div>Error: {error}</div>;
 

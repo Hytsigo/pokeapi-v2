@@ -2,6 +2,7 @@ import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import usePokemonDetail from "../hooks/usePokemonDetail";
 import Loader from "./common/Loader";
+import NotFound from "./NotFound";
 
 const PokemonDetail: React.FC = () => {
     const { name } = useParams<{ name: string }>();
@@ -12,12 +13,8 @@ const PokemonDetail: React.FC = () => {
         return <Loader />;
     }
 
-    if (error) {
-        return <div>Error: {error}</div>;
-    }
-
-    if (!pokemon) {
-        return <div>No Pokémon found</div>;
+    if (error || !pokemon) {
+        return <NotFound />;
     }
 
     const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`;

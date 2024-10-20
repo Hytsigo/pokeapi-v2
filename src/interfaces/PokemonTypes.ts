@@ -32,3 +32,10 @@ export interface PokemonDetailData {
 export interface PokemonWithColor extends PokemonDetailData {
     color: string;
 }
+
+export interface PokemonApiResponse {
+    count: number;
+    next: string;
+    previous: string | null;
+    results: PokemonListItem[];
+}

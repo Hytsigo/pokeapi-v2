@@ -1,48 +1,48 @@
-import { useState, useRef } from "react";
-import { PokemonDetailData } from "../interfaces/PokemonInterfaces";
+import { useState, useRef, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { PokemonDetailData } from "../interfaces/PokemonTypes";
+import { getPokemons, fetchPokemonDetail } from "../services/pokemon.service";
 
 const useSearch = (data: PokemonDetailData[]) => {
     const [searchResults, setSearchResults] = useState<
         PokemonDetailData[] | null
     >(null);
     const [loading, setLoading] = useState<boolean>(false);
+    const [currentPage, setCurrentPage] = useState<number>(1);
     const searchTimeout = useRef<NodeJS.Timeout | null>(null);
 
-    const fetchPokemonsFromAPI = async (query: string) => {
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        const queryParams = new URLSearchParams(location.search);
+        const page = queryParams.get("page");
+
+        if (page) {
+            setCurrentPage(Number(page));
+        }
+    }, [location.search]);
+
+    const fetchPokemonsFromAPI = async (query: string, page: number = 1) => {
         setLoading(true);
         try {
-            const response = await fetch(
-                `https://pokeapi.co/api/v2/pokemon?limit=1000`
-            );
-            if (!response.ok) {
-                setSearchResults([]);
-                return;
-            }
+            const limit = 20;
+            const offset = (page - 1) * limit;
 
-            const allPokemons = await response.json();
+            const allPokemons = await getPokemons(1000, 0);
 
-            const filteredPokemons = allPokemons.results.filter(
-                (pokemon: { name: string }) =>
-                    pokemon.name.toLowerCase().includes(query.toLowerCase())
+            const filteredPokemons = allPokemons.results.filter((pokemon) =>
+                pokemon.name.toLowerCase().includes(query.toLowerCase())
             );
 
             const detailedPokemons: PokemonDetailData[] = [];
-            for (const pokemon of filteredPokemons.slice(0, 20)) {
+            for (const pokemon of filteredPokemons.slice(
+                offset,
+                offset + limit
+            )) {
                 const pokemonId = pokemon.url.split("/").filter(Boolean).pop();
-                const detailedResponse = await fetch(
-                    `https://pokeapi.co/api/v2/pokemon/${pokemonId}`
-                );
-                const detailedData = await detailedResponse.json();
-
-                detailedPokemons.push({
-                    id: detailedData.id,
-                    name: detailedData.name,
-                    abilities: detailedData.abilities,
-                    types: detailedData.types,
-                    sprites: {
-                        front_default: detailedData.sprites.front_default,
-                    },
-                });
+                const detailedData = await fetchPokemonDetail(pokemonId!);
+                detailedPokemons.push(detailedData);
             }
 
             setSearchResults(detailedPokemons);
@@ -54,7 +54,7 @@ const useSearch = (data: PokemonDetailData[]) => {
         }
     };
 
-    const debounceSearch = (query: string) => {
+    const debounceSearch = (query: string, page: number = 1) => {
         if (searchTimeout.current) {
             clearTimeout(searchTimeout.current);
         }
@@ -70,14 +70,24 @@ const useSearch = (data: PokemonDetailData[]) => {
             );
 
             if (localResults.length > 0) {
-                setSearchResults(localResults.slice(0, 20));
+                setSearchResults(
+                    localResults.slice((page - 1) * 20, page * 20)
+                );
             } else {
-                fetchPokemonsFromAPI(query);
+                fetchPokemonsFromAPI(query, page);
             }
+
+            navigate(`?page=${page}`);
         }, 500);
     };
 
-    return { searchResults, debounceSearch, loading };
+    return {
+        searchResults,
+        debounceSearch,
+        loading,
+        currentPage,
+        setCurrentPage,
+    };
 };
 
 export default useSearch;
