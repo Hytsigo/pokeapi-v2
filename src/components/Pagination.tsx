@@ -1,34 +1,31 @@
 import React from "react";
 
-interface PaginationProps {
+interface Props {
     currentPage: number;
     onPrevious: () => void;
     onNext: () => void;
 }
 
-const Pagination: React.FC<PaginationProps> = ({
-    currentPage,
-    onPrevious,
-    onNext,
-}) => {
+const Pagination: React.FC<Props> = ({ currentPage, onPrevious, onNext }) => {
     return (
-        <div className="mt-8 flex justify-center gap-8">
-            <button
-                className="w-32 bg-primary-100 text-text-100 px-4 py-2 rounded-lg hover:bg-primary-200 transition-all disabled:opacity-50"
-                onClick={onPrevious}
-                disabled={currentPage === 0}
-            >
-                Previous
-            </button>
-            <span className="text-text-100 font-medium flex items-center">
-                Page {currentPage + 1}
-            </span>
-            <button
-                className="w-32 bg-primary-100 text-text-100 px-4 py-2 rounded-lg hover:bg-primary-200 transition-all"
-                onClick={onNext}
-            >
-                Next
-            </button>
+        <div className="flex flex-col items-center mt-8">
+            <div className="flex items-center space-x-4 mb-2">
+                <button
+                    onClick={onPrevious}
+                    className="px-4 py-2 bg-primary-200 text-white rounded-lg shadow hover:bg-primary-300 transition"
+                >
+                    Previous
+                </button>
+                <span className="text-lg font-medium text-text-200">
+                    Page {currentPage}
+                </span>
+                <button
+                    onClick={onNext}
+                    className="px-4 py-2 bg-primary-200 text-white rounded-lg shadow hover:bg-primary-300 transition"
+                >
+                    Next
+                </button>
+            </div>
         </div>
     );
 };

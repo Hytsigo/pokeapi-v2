@@ -1,65 +1,79 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { PokemonDetailData } from "../interfaces/PokemonInterfaces";
+import React from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import usePokemonDetail from "../hooks/usePokemonDetail";
 import Loader from "./common/Loader";
 
 const PokemonDetail: React.FC = () => {
     const { name } = useParams<{ name: string }>();
-    const [pokemon, setPokemon] = useState<PokemonDetailData | null>(null);
+    const navigate = useNavigate();
+    const { pokemon, loading, error } = usePokemonDetail(name!);
 
-    useEffect(() => {
-        const fetchPokemonDetail = async () => {
-            try {
-                const response = await fetch(
-                    `https://pokeapi.co/api/v2/pokemon/${name}`
-                );
-                const data: PokemonDetailData = await response.json();
-                setPokemon(data);
-            } catch (error) {
-                console.error("Failed to fetch Pokémon details:", error);
-            }
-        };
+    if (loading) {
+        return <Loader />;
+    }
 
-        fetchPokemonDetail();
-    }, [name]);
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
 
     if (!pokemon) {
-        return <Loader />;
+        return <div>No Pokémon found</div>;
     }
 
     const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`;
 
     return (
-        <div className="bg-bg-100 min-h-screen text-text-100 p-8">
-            <h1 className="text-4xl font-bold mb-8 text-primary-200 capitalize">
-                {pokemon.name}
-            </h1>
-            <img
-                src={imageUrl}
-                alt={pokemon.name}
-                className="w-64 h-64 sm:w-96 sm:h-96 object-contain mx-auto mb-6"
-            />
+        <div className="bg-bg-100 min-h-screen flex flex-col items-center p-4 sm:p-8">
+            <div className="bg-gradient-to-br from-primary-300 to-primary-500 shadow-2xl rounded-lg p-6 max-w-md w-full text-center relative">
+                <button
+                    className="absolute top-4 left-4 block sm:hidden bg-primary-500 text-white p-2 rounded-md shadow-md hover:bg-primary-400 transition-colors"
+                    onClick={() => navigate("/")}
+                >
+                    Back
+                </button>
 
-            <div className="mb-4">
-                <h2 className="text-2xl font-bold mb-2">Abilities</h2>
-                <ul>
-                    {pokemon.abilities.map((ability, index) => (
-                        <li key={index} className="text-text-200 capitalize">
-                            {ability.ability.name}
-                        </li>
-                    ))}
-                </ul>
-            </div>
+                <h1 className="text-3xl font-bold mb-4 text-white capitalize">
+                    {pokemon.name}
+                </h1>
+                <img
+                    src={imageUrl}
+                    alt={pokemon.name}
+                    className="w-48 h-48 sm:w-64 sm:h-64 object-contain mx-auto mb-4 transition-transform transform hover:scale-105"
+                />
 
-            <div>
-                <h2 className="text-2xl font-bold mb-2">Types</h2>
-                <ul>
-                    {pokemon.types.map((type, index) => (
-                        <li key={index} className="text-text-200 capitalize">
-                            {type.type.name}
-                        </li>
-                    ))}
-                </ul>
+                <p className="text-lg text-gray-200 mb-4 italic">
+                    Pokémon ID: {pokemon.id}
+                </p>
+
+                <div className="mb-4 border-t border-gray-300 pt-4">
+                    <h2 className="text-xl font-bold mb-2 text-white">
+                        Abilities
+                    </h2>
+                    <ul className="grid grid-cols-2 gap-2">
+                        {pokemon.abilities.map((ability, index) => (
+                            <li
+                                key={index}
+                                className="p-2 rounded-lg text-white capitalize shadow bg-gray-600"
+                            >
+                                {ability.ability.name}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+
+                <div className="border-t border-gray-300 pt-4">
+                    <h2 className="text-xl font-bold mb-2 text-white">Types</h2>
+                    <ul className="grid grid-cols-2 gap-2">
+                        {pokemon.types.map((type, index) => (
+                            <li
+                                key={index}
+                                className="p-2 rounded-lg text-white capitalize shadow bg-gray-600"
+                            >
+                                {type.type.name}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             </div>
         </div>
     );

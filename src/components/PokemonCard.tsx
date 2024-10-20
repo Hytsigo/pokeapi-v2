@@ -22,7 +22,7 @@ const PokemonCard: React.FC = () => {
 
     return (
         <div className="bg-bg-100 min-h-screen text-text-100 p-8">
-            <h1 className="text-3xl font-bold mb-8 text-primary-200">
+            <h1 className="text-3xl font-bold mb-8 text-primary-200 text-center">
                 Pokémon List
             </h1>
             <Search onSearch={debounceSearch} />
@@ -33,22 +33,22 @@ const PokemonCard: React.FC = () => {
                     </div>
                 )}
                 <ul
-                    className={`grid grid-cols-2 sm:grid-cols-4 gap-4 ${
+                    className={`grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 ${
                         loading || searchLoading ? "opacity-50" : ""
                     }`}
                 >
                     {displayedPokemons.map((pokemon) => (
                         <li
                             key={pokemon.name}
-                            className="bg-bg-200 p-4 rounded-lg shadow-lg hover:bg-bg-300 transition-all cursor-pointer"
+                            className="bg-bg-200 p-4 rounded-lg shadow-xl transition-transform transform hover:scale-105 cursor-pointer border border-gray-300 hover:border-primary-200"
                             onClick={() => handlePokemonClick(pokemon.name)}
                         >
                             <img
                                 src={pokemon.sprites.front_default}
                                 alt={pokemon.name}
-                                className="w-full h-24 object-contain mb-2"
+                                className="w-full h-32 object-contain mb-2"
                             />
-                            <p className="capitalize font-medium text-text-200">
+                            <p className="capitalize font-semibold text-text-200 text-lg text-center">
                                 {pokemon.name}
                             </p>
                         </li>
