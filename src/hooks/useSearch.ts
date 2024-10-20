@@ -8,34 +8,46 @@ const useSearch = (data: PokemonDetailData[]) => {
     const [loading, setLoading] = useState<boolean>(false);
     const searchTimeout = useRef<NodeJS.Timeout | null>(null);
 
-    const handleSearch = async (query: string) => {
-        if (!query.trim()) {
-            setSearchResults(null);
-            return;
-        }
-
+    const fetchPokemonsFromAPI = async (query: string) => {
         setLoading(true);
-
         try {
             const response = await fetch(
                 `https://pokeapi.co/api/v2/pokemon?limit=1000`
             );
             if (!response.ok) {
+                setSearchResults([]);
                 return;
             }
+
             const allPokemons = await response.json();
+
             const filteredPokemons = allPokemons.results.filter(
                 (pokemon: { name: string }) =>
                     pokemon.name.toLowerCase().includes(query.toLowerCase())
             );
-            const detailedPokemons = await Promise.all(
-                filteredPokemons.map(async (pokemon: { url: string }) => {
-                    const res = await fetch(pokemon.url);
-                    return res.json();
-                })
-            );
+
+            const detailedPokemons: PokemonDetailData[] = [];
+            for (const pokemon of filteredPokemons.slice(0, 20)) {
+                const pokemonId = pokemon.url.split("/").filter(Boolean).pop();
+                const detailedResponse = await fetch(
+                    `https://pokeapi.co/api/v2/pokemon/${pokemonId}`
+                );
+                const detailedData = await detailedResponse.json();
+
+                detailedPokemons.push({
+                    id: detailedData.id,
+                    name: detailedData.name,
+                    abilities: detailedData.abilities,
+                    types: detailedData.types,
+                    sprites: {
+                        front_default: detailedData.sprites.front_default,
+                    },
+                });
+            }
+
             setSearchResults(detailedPokemons);
-        } catch {
+        } catch (error) {
+            console.error("Error fetching Pokémon data:", error);
             setSearchResults([]);
         } finally {
             setLoading(false);
@@ -46,12 +58,22 @@ const useSearch = (data: PokemonDetailData[]) => {
         if (searchTimeout.current) {
             clearTimeout(searchTimeout.current);
         }
+
         searchTimeout.current = setTimeout(() => {
+            if (query.trim() === "") {
+                setSearchResults(null);
+                return;
+            }
+
             const localResults = data.filter((item) =>
                 item.name.toLowerCase().includes(query.toLowerCase())
             );
-            setSearchResults(localResults);
-            handleSearch(query);
+
+            if (localResults.length > 0) {
+                setSearchResults(localResults.slice(0, 20));
+            } else {
+                fetchPokemonsFromAPI(query);
+            }
         }, 500);
     };
 

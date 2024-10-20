@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { PokemonDetailData } from "../interfaces/PokemonInterfaces";
+import Loader from "./common/Loader";
 
 const PokemonDetail: React.FC = () => {
     const { name } = useParams<{ name: string }>();
@@ -23,7 +24,7 @@ const PokemonDetail: React.FC = () => {
     }, [name]);
 
     if (!pokemon) {
-        return <div className="text-text-100">Loading...</div>;
+        return <Loader />;
     }
 
     const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`;

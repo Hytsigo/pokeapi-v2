@@ -18,7 +18,7 @@ export interface PokemonListItem {
 
 export interface Sprites {
     front_default: string;
-    back_default: string;
+    back_default?: string;
 }
 
 export interface PokemonDetailData {
@@ -27,4 +27,8 @@ export interface PokemonDetailData {
     abilities: Ability[];
     types: Type[];
     sprites: Sprites;
+}
+
+export interface PokemonWithColor extends PokemonDetailData {
+    color: string;
 }
