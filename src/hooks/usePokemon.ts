@@ -1,48 +1,29 @@
-import { useState, useEffect } from "react";
-import { getPokemons } from "../services/pokemon.service";
-import { PokemonListItem, PokemonWithColor } from "../interfaces/PokemonTypes";
+import { useEffect, useState } from "react";
+import { InfoPokemon } from "../interfaces/PokemonTypes";
+import { pokeApi } from "../api/pokeApi";
 
-export const usePokemon = (limit: number = 20, offset: number = 0) => {
-    const [pokemonList, setPokemonList] = useState<PokemonListItem[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
-    const [pokemonDetails, setPokemonDetails] = useState<PokemonWithColor[]>(
-        []
-    );
+export const usePokemon = (id: string) => {
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(false);
+    const [pokemon, setPokemon] = useState<InfoPokemon>({} as InfoPokemon);
+
+    const loadPokemon = async () => {
+        const resp = await pokeApi.get<InfoPokemon>(`/${id}`);
+        if (resp.status === 200) {
+            setPokemon(resp.data);
+        } else {
+            setError(true);
+        }
+        setIsLoading(false);
+    };
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const data = await getPokemons(limit, offset);
-                setPokemonList(data.results);
+        loadPokemon();
+    }, []);
 
-                const detailsPromises = data.results.map(async (pokemon) => {
-                    const response = await fetch(pokemon.url);
-                    const pokemonData = await response.json();
-
-                    const speciesResponse = await fetch(
-                        pokemonData.species.url
-                    );
-                    const speciesData = await speciesResponse.json();
-
-                    return {
-                        ...pokemonData,
-                        color: speciesData.color.name,
-                    } as PokemonWithColor;
-                });
-
-                const details = await Promise.all(detailsPromises);
-                setPokemonDetails(details);
-            } catch (err) {
-                console.log(err);
-                setError("Failed to load Pokémon data");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchData();
-    }, [limit, offset]);
-
-    return { pokemonList, pokemonDetails, loading, error };
+    return {
+        isLoading,
+        error,
+        pokemon,
+    };
 };
