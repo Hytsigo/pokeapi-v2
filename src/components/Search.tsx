@@ -1,15 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 
 interface Props {
     onSearch: (query: string) => void;
 }
 
 const Search: React.FC<Props> = ({ onSearch }) => {
-    const [query, setQuery] = useState("");
-
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = event.target;
-        setQuery(value);
         onSearch(value);
     };
 
@@ -38,7 +35,6 @@ const Search: React.FC<Props> = ({ onSearch }) => {
                         type="search"
                         className="block w-full p-4 pl-10 text-sm text-text-100 border border-gray-300 rounded-lg bg-bg-200 focus:ring-primary-100 focus:border-primary-100 dark:bg-bg-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-text-100 dark:focus:ring-primary-200 dark:focus:border-primary-200"
                         placeholder="Search your favorites"
-                        value={query}
                         onChange={handleChange}
                         required
                     />

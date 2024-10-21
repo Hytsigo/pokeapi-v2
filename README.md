@@ -1,23 +1,29 @@
-# Pokémon App
+# Pokémon List
 
-This is a Pokémon information web application built using **React** and **TypeScript**. It fetches data from the [PokéAPI](https://pokeapi.co/), allowing users to view Pokémon details, navigate through paginated lists, and interact with an intuitive and responsive interface.
+**Pokémon List** is a web application built with React, TypeScript, and Tailwind CSS, allowing users to explore a list of Pokémon. Users can search for their favorite Pokémon, navigate through paginated results, and view basic details such as the name and image of each Pokémon.
 
-## Features
+## 🚀 Demo
 
--   **Pokémon List:** View a paginated list of Pokémon with their names and images.
--   **Pokémon Details:** Click on any Pokémon to see detailed information including stats, abilities, and type.
--   **Persistent Data:** Previously fetched Pokémon pages are cached to avoid redundant API requests when navigating backward.
--   **Error Handling:** Graceful error handling with custom error components in case of failed API requests.
--   **Loading States:** Loading indicators are shown while data is being fetched from the API.
+Link to live demo (if you have one)
 
-## Tech Stack
+## 🛠️ Technologies
 
--   **React** (UI Library)
--   **TypeScript** (For type safety)
--   **Axios** (API requests)
--   **ESLint & Prettier** (For code quality and formatting)
+This project is built using the following technologies:
 
-## Installation
+-   **React**: JavaScript library for building user interfaces.
+-   **TypeScript**: A language that adds static typing to JavaScript.
+-   **Tailwind CSS**: A utility-first CSS framework for styling directly in components.
+-   **React Router**: For navigation between different pages.
+-   **PokéAPI**: The API used to fetch Pokémon data.
+
+## ⚙️ Features
+
+-   🌐 **Explore Pokémon**: View a paginated list of Pokémon and navigate through pages.
+-   🔎 **Search Pokémon**: Includes a search bar to find your favorite Pokémon.
+-   📖 **Basic Details**: Displays the image and name of each Pokémon in the list.
+-   🖱️ **Navigation**: Click on a Pokémon to navigate to its detail page (to be implemented).
+
+## 🚀 Installation and Usage
 
 1. Clone the repository:
 
