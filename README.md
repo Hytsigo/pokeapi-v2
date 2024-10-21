@@ -4,7 +4,7 @@
 
 ## 🚀 Demo
 
-Link to live demo (if you have one)
+https://pokeapi-v2.vercel.app/
 
 ## 🛠️ Technologies
 
