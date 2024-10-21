@@ -1,26 +1,24 @@
 import React from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import usePokemonDetail from "../hooks/usePokemonDetail";
-import Loader from "./common/Loader";
-import NotFound from "./NotFound";
+import { useNavigate, useParams } from "react-router-dom";
+import { usePokemon } from "../hooks/usePokemon";
+import Loader from "../components/Loader";
+import { NotFound } from "./NotFound";
+import { IMAGE_URL } from "../constants";
 
-const PokemonDetail: React.FC = () => {
-    const { name } = useParams<{ name: string }>();
+export const PokemonDetailPage: React.FC = () => {
+    const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
-    const { pokemon, loading, error } = usePokemonDetail(name!);
+    const { isLoading, pokemon, error } = usePokemon(id!);
 
-    if (loading) {
+    if (isLoading) {
         return <Loader />;
     }
 
     if (error || !pokemon) {
         return <NotFound />;
     }
-
-    const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`;
-
     return (
-        <div className="bg-bg-100 min-h-screen flex flex-col items-center p-4 sm:p-8">
+        <section className="bg-bg-100 min-h-screen flex flex-col items-center p-4 sm:p-8">
             <div className="bg-gradient-to-br from-primary-300 to-primary-500 shadow-2xl rounded-lg p-6 max-w-md w-full text-center relative">
                 <button
                     className="absolute top-4 left-4 block sm:hidden bg-primary-500 text-white p-2 rounded-md shadow-md hover:bg-primary-400 transition-colors"
@@ -33,7 +31,7 @@ const PokemonDetail: React.FC = () => {
                     {pokemon.name}
                 </h1>
                 <img
-                    src={imageUrl}
+                    src={`${IMAGE_URL}/${pokemon.id}.png`}
                     alt={pokemon.name}
                     className="w-48 h-48 sm:w-64 sm:h-64 object-contain mx-auto mb-4 transition-transform transform hover:scale-105"
                 />
@@ -72,8 +70,6 @@ const PokemonDetail: React.FC = () => {
                     </ul>
                 </div>
             </div>
-        </div>
+        </section>
     );
 };
-
-export default PokemonDetail;
