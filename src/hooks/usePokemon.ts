@@ -5,16 +5,17 @@ import { pokeApi } from "../api/pokeApi";
 export const usePokemon = (id: string) => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(false);
-    const [pokemon, setPokemon] = useState<InfoPokemon>({} as InfoPokemon);
+    const [pokemon, setPokemon] = useState<InfoPokemon | null>(null);
 
     const loadPokemon = async () => {
-        const resp = await pokeApi.get<InfoPokemon>(`/${id}`);
-        if (resp.status === 200) {
+        try {
+            const resp = await pokeApi.get<InfoPokemon>(`/${id}`);
             setPokemon(resp.data);
-        } else {
+        } catch {
             setError(true);
+        } finally {
+            setIsLoading(false);
         }
-        setIsLoading(false);
     };
 
     useEffect(() => {

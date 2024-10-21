@@ -1,51 +1,47 @@
-# React + TypeScript + Vite
+# Pokémon App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is a Pokémon information web application built using **React** and **TypeScript**. It fetches data from the [PokéAPI](https://pokeapi.co/), allowing users to view Pokémon details, navigate through paginated lists, and interact with an intuitive and responsive interface.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+-   **Pokémon List:** View a paginated list of Pokémon with their names and images.
+-   **Pokémon Details:** Click on any Pokémon to see detailed information including stats, abilities, and type.
+-   **Persistent Data:** Previously fetched Pokémon pages are cached to avoid redundant API requests when navigating backward.
+-   **Error Handling:** Graceful error handling with custom error components in case of failed API requests.
+-   **Loading States:** Loading indicators are shown while data is being fetched from the API.
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+-   **React** (UI Library)
+-   **TypeScript** (For type safety)
+-   **Axios** (API requests)
+-   **ESLint & Prettier** (For code quality and formatting)
 
-- Configure the top-level `parserOptions` property like this:
+## Installation
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+1. Clone the repository:
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+    ```bash
+    git clone https://github.com/Hytsigo/pokeapi-v2.git
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+    ```
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
-# pokeapi-v2
+2. Navigate to the project directory:
+
+    ```bash
+    cd pokeapi-v2
+
+    ```
+
+3. Install the dependencies:
+
+    ```bash
+    npm install
+
+    ```
+
+4. Run the application:
+
+    ```bash
+    npm run dev
+    ```
